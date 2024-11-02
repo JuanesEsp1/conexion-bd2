@@ -50,10 +50,10 @@ router.get("/productos", async (req, res) => {
 
 
 router.post("/crear", async (req, res) => {
-  const { nombre, precio, categoria, stock, descripcion, estado, fecha } = req.body;
+  const { nombre, precio, stock, descripcion, estado } = req.body;
 
   try {
-    const nuevoProducto = await productos.create({ nombre, precio, categoria, stock, descripcion, estado, fecha });
+    const nuevoProducto = await productos.create({ nombre, precio, stock, descripcion, estado });
     res.status(201).json(nuevoProducto); // Responder con el documento creado
   } catch (error) {
     console.error('Error al crear el producto:', error);
@@ -64,16 +64,20 @@ router.post("/crear", async (req, res) => {
 
 
 // Actualizar un producto por nombre (versión modificada)
-router.put("/actualizar", async (req, res) => {
-  const { nombre, nuevoNombre, nuevoPrecio } = req.body;
+router.put("/actualizar/:id", async (req, res) => {
+  const { id } = req.params;
+  const { nuevoNombre, nuevoPrecio, nuevoDescripcion, nuevoStock } = req.body;
 
   try {
     // Buscar y actualizar el producto por su nombre
-    const productoActualizado = await ModelTienda.findOneAndUpdate(
-      { nombre: nombre }, 
-      { nombre: nuevoNombre, precio: nuevoPrecio },
-      { new: true } 
-    );
+    const productoActualizado = await productos.findOneAndUpdate(
+      { id: id },
+      {
+        nombre: nuevoNombre,
+        precio: nuevoPrecio,
+        descripcion: nuevoDescripcion,
+        stock: nuevoStock,
+      }, { new: true });
 
     if (!productoActualizado) {
       return res.status(404).json({ error: 'Producto no encontrado.' });

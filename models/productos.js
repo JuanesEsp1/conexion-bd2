@@ -1,6 +1,5 @@
 const mongoose = require('mongoose')
 const AutoIncrement = require('mongoose-sequence')(mongoose);
-const moment = require('moment-timezone');
 
 const fechaActual = new Date();
 
@@ -10,11 +9,6 @@ const productosSchema = new mongoose.Schema({
         type: String, 
         required: true, 
         trim: true 
-    },
-    categoria: {
-        type: String,
-        required: true,
-        trim: true
     },
     precio: {
         type: Number,

@@ -6,13 +6,9 @@ const app = express();
 const port = 3001;
 const router = require('./routes/index.js')
 
-
-
-
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
-
 
 // Ruta básica para la página de inicio
 app.get('/', (req, res) => {
@@ -21,7 +17,6 @@ app.get('/', (req, res) => {
 
 dbconnect();
 app.use('/', router);
-
 
 // Iniciar el servidor
 app.listen(port, () => {
