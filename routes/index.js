@@ -8,8 +8,8 @@ const usuarios = require('../models/usuarios.js');
 
 router.get("/", async(req, res) => {
   try {
-    const productos = await productos.find();
-    res.status(200).json(productos);
+    const productosData = await productos.find();
+    res.status(200).json(productosData);
   } catch (error) {
     console.error('Error al obtener los productos:', error);
     res.status(500).json({ error: 'Hubo un problema al obtener los productos.' });
@@ -33,9 +33,6 @@ router.post("/login", async (req, res) => {
   }
 });
 
-
-
-
 router.get("/productos", async (req, res) => {
   try {
     const products = await productos.find();
@@ -50,10 +47,10 @@ router.get("/productos", async (req, res) => {
 
 
 router.post("/crear", async (req, res) => {
-  const { nombre, precio, stock, descripcion, estado } = req.body;
+  const { nombre, precio, stock, categoria, stockMinimo, estado } = req.body;
 
   try {
-    const nuevoProducto = await productos.create({ nombre, precio, stock, descripcion, estado });
+    const nuevoProducto = await productos.create({ nombre, precio, stock, categoria, stockMinimo, estado });
     res.status(201).json(nuevoProducto); // Responder con el documento creado
   } catch (error) {
     console.error('Error al crear el producto:', error);
@@ -65,25 +62,30 @@ router.post("/crear", async (req, res) => {
 
 // Actualizar un producto por nombre (versión modificada)
 router.put("/actualizar/:id", async (req, res) => {
-  const { id } = req.params;
-  const { nuevoNombre, nuevoPrecio, nuevoDescripcion, nuevoStock } = req.body;
+  const { id } = req.params; // ID del producto enviado en la URL
+  const { nombre, precio, categoria, stock, stockMinimo, estado } = req.body; // Datos actualizados
 
   try {
-    // Buscar y actualizar el producto por su nombre
+    const numericId = parseInt(id, 10);
+    // Buscar y actualizar el producto utilizando el campo `id` personalizado
     const productoActualizado = await productos.findOneAndUpdate(
-      { id: id },
+      { id: numericId }, // Condición para buscar el producto por `id`
       {
-        nombre: nuevoNombre,
-        precio: nuevoPrecio,
-        descripcion: nuevoDescripcion,
-        stock: nuevoStock,
-      }, { new: true });
+        $set: { nombre, precio, categoria, stock, stockMinimo, estado } // Campos a actualizar
+      },
+      { new: true } // Retorna el documento actualizado
+    );
 
+    // Validar si el producto existe
     if (!productoActualizado) {
       return res.status(404).json({ error: 'Producto no encontrado.' });
     }
 
-    res.status(200).json(productoActualizado); // Responder con el producto actualizado
+    // Responder con el producto actualizado
+    res.status(200).json({
+      message: 'Producto actualizado exitosamente.',
+      data: productoActualizado
+    });
   } catch (error) {
     console.error('Error al actualizar el producto:', error);
     res.status(500).json({ error: 'Hubo un problema al actualizar el producto.' });
@@ -91,6 +93,18 @@ router.put("/actualizar/:id", async (req, res) => {
 });
 
 
+
+
+
+router.delete("/eliminar/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    await productos.findOneAndDelete({ id: id });
+    res.status(200).json({ message: 'Producto eliminado correctamente.' });
+  } catch (error) {
+    res.status(500).json({ error: 'Hubo un problema al eliminar el producto.' });
+  }
+});
 
 
 

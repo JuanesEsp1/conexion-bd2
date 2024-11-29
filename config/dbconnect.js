@@ -2,7 +2,7 @@ const { default: mongoose } = require('mongoose');
 const moongose = require('mongoose');
 
 const dbconnect = () => {
-    mongoose.connect('mongodb://localhost:27017/productos', { 
+    mongoose.connect('mongodb://localhost:27017/tienda_ropa', { 
         useNewUrlParser: true,                  
         useUnifiedTopology: true,              
       })

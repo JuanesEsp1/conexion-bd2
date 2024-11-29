@@ -15,15 +15,20 @@ const productosSchema = new mongoose.Schema({
         required: true, 
         min: [0, 'El precio debe ser un número positivo'] 
     },
+    categoria: {
+        type: String,
+        required: true,
+        trim: true
+    },
     stock: {
         type: Number,
         required: true,
         min: [0, 'El stock debe ser un número positivo']
     },
-    descripcion: {
-        type: String,
+    stockMinimo: {
+        type: Number,
         required: true,
-        trim: true
+        min: [0, 'El stock mínimo debe ser un número positivo']
     },
     estado: {
         type: String,
