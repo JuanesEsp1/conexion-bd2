@@ -1,16 +1,12 @@
-const { default: mongoose } = require('mongoose');
-const moongose = require('mongoose');
+const mongoose = require('mongoose'); // Solo necesitas una importación
 
 const dbconnect = () => {
-    mongoose.connect('mongodb://localhost:27017/tienda_ropa', { 
-        useNewUrlParser: true,                  
-        useUnifiedTopology: true,              
-      })
+    mongoose.connect('mongodb://localhost:27017/tienda_ropa')
       .then(() => {
-        console.log('conectado a  MongoDB');
+        console.log('Conectado a MongoDB');
       })
-      .catch(err => { //Captura de errores: 
-        console.error('error al conectar a MongoDB', err);
+      .catch(err => {
+        console.error('Error al conectar a MongoDB', err);
       });
 }
 
